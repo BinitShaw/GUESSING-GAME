@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #FFCC00, #FF6600);
+            margin: 0;
+            overflow: hidden;
+            animation: backgroundAnimation 5s infinite alternate;
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background: linear-gradient(135deg, #FFCC00, #FF6600); }
+            100% { background: linear-gradient(135deg, #FF6600, #FFCC00); }
+        }
+
+        .container {
+            text-align: center;
+            background: linear-gradient(135deg, #FFFFFF, #FFD700);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s ease, transform 1s ease;
+            transform: scale(0.9);
+        }
+
+        .show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            width: 80%;
+            background-color: #FFFACD;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #FF4500, #FF6347);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #FF6347, #FF4500);
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #FF4500;
+            animation: textAnimation 2s infinite alternate;
+        }
+
+        @keyframes textAnimation {
+            0% { color: #FF4500; }
+            100% { color: #FF6347; }
+        }
+    </style>
+</head>
+<body>
+    <div id="intro" class="container show">
+        <h1>Welcome to the Guessing Game!</h1>
+        <p>Try to guess the number I am thinking of, between 1 and 100.</p>
+        <button id="startButton">Start Game</button>
+    </div>
+    <div id="game" class="container hidden">
+        <h1>Guessing Game</h1>
+        <p>I'm thinking of a number between 1 and 100. Can you guess it?</p>
+        <input type="number" id="guessInput" placeholder="Enter your guess">
+        <button id="guessButton">Guess</button>
+        <p id="feedback"></p>
+        <p id="attempts"></p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            let numberToGuess = Math.floor(Math.random() * 100) + 1;
+            console.log("The number to guess is:", numberToGuess);  // Display the answer in the console
+            let numberOfAttempts = 0;
+            const intro = document.getElementById('intro');
+            const game = document.getElementById('game');
+            const startButton = document.getElementById('startButton');
+            const guessInput = document.getElementById('guessInput');
+            const guessButton = document.getElementById('guessButton');
+            const feedback = document.getElementById('feedback');
+            const attempts = document.getElementById('attempts');
+
+            startButton.addEventListener('click', () => {
+                intro.classList.remove('show');
+                intro.classList.add('hidden');
+                game.classList.remove('hidden');
+                setTimeout(() => {
+                    game.classList.add('show');
+                }, 10);  // Allow a small delay for the transition effect
+            });
+
+            guessButton.addEventListener('click', () => {
+                let userGuess = parseInt(guessInput.value);
+                numberOfAttempts++;
+
+                if (isNaN(userGuess)) {
+                    feedback.textContent = "Please enter a valid number.";
+                    feedback.style.color = "red";
+                } else if (userGuess < numberToGuess) {
+                    feedback.textContent = "Too low! Try again.";
+                    feedback.style.color = "orange";
+                } else if (userGuess > numberToGuess) {
+                    feedback.textContent = "Too high! Try again.";
+                    feedback.style.color = "orange";
+                } else {
+                    feedback.textContent = `Congratulations! You've guessed the number in ${numberOfAttempts} attempts.`;
+                    feedback.style.color = "green";
+                    guessButton.disabled = true;
+                }
+
+                attempts.textContent = `Attempts: ${numberOfAttempts}`;
+            });
+        });
+    </script>
+</body>
+</html>
